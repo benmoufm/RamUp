@@ -74,6 +74,10 @@ class RampPlacerViewController: UIViewController, ARSCNViewDelegate, UIPopoverPr
         return .none
     }
 
+    func onRampSelected(_ rampName: String) {
+        //TODO: Add node to the scene
+    }
+
     //MARK: - Actions
     @IBAction func rampButtonPressed(_ sender: UIButton) {
         let rampPickerViewController = RampPickerViewController(size: CGSize(width: 250, height: 500))

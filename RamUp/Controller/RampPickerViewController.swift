@@ -76,16 +76,7 @@ class RampPickerViewController: UIViewController {
         let hitResults = sceneView.hitTest(location, options: [:])
         if hitResults.count > 0 {
             let node = hitResults[0].node
-            switch node.name! {
-            case "pipe":
-                break
-            case "pyramid":
-                break
-            case "quarter":
-                break
-            default:
-                break
-            }
+            rampPlacerViewController.onRampSelected(node.name!)
         }
     }
 }
