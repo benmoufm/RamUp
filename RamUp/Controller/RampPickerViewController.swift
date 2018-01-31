@@ -30,5 +30,7 @@ class RampPickerViewController: UIViewController {
         sceneView = SCNView(frame: CGRect(x: 0, y: 0, width: size.width, height: size.height))
         view.insertSubview(sceneView, at: 0)
         preferredContentSize = size
+        let scene = SCNScene(named: "art.scnassets/ramps.scn")!
+        sceneView.scene = scene
     }
 }
