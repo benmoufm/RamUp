@@ -14,6 +14,7 @@ class RampPickerViewController: UIViewController {
     //MARK: - Variables
     var sceneView: SCNView!
     var size: CGSize!
+    weak var rampPlacerViewController: RampPlacerViewController!
 
     init(size: CGSize) {
         super.init(nibName: nil, bundle: nil)
