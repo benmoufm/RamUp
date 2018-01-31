@@ -68,4 +68,8 @@ class RampPlacerViewController: UIViewController, ARSCNViewDelegate {
         // Reset tracking and/or remove existing anchors if consistent tracking is required
         
     }
+
+    //MARK: - Actions
+    @IBAction func rampButtonPressed(_ sender: Any) {
+    }
 }
