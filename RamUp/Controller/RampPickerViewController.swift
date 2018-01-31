@@ -65,5 +65,26 @@ class RampPickerViewController: UIViewController {
         node?.scale = SCNVector3Make(0.0058, 0.0058, 0.0058)
         node?.position = SCNVector3Make(-1, -2.2, -1)
         scene.rootNode.addChildNode(node!)
+
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+        sceneView.addGestureRecognizer(tap)
+    }
+
+    @objc func handleTap(_ gestureRecognizer: UIGestureRecognizer) {
+        let location = gestureRecognizer.location(in: sceneView)
+        let hitResults = sceneView.hitTest(location, options: [:])
+        if hitResults.count > 0 {
+            let node = hitResults[0].node
+            switch node.name! {
+            case "pipe":
+                break
+            case "pyramid":
+                break
+            case "quarter":
+                break
+            default:
+                break
+            }
+        }
     }
 }
