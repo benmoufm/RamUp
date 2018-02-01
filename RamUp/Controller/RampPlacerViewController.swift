@@ -13,11 +13,15 @@ import ARKit
 class RampPlacerViewController: UIViewController, ARSCNViewDelegate, UIPopoverPresentationControllerDelegate {
     //MARK: - Outlets
     @IBOutlet var sceneView: ARSCNView!
+    @IBOutlet weak var controlsStackView: UIStackView!
+    @IBOutlet weak var rotateButton: UIButton!
+    @IBOutlet weak var moveUpButton: UIButton!
+    @IBOutlet weak var moveDownButton: UIButton!
 
     //MARK: - Variables
     var selectedRampName: String?
     var selectedRamp: SCNNode?
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -117,5 +121,12 @@ class RampPlacerViewController: UIViewController, ARSCNViewDelegate, UIPopoverPr
         present(rampPickerViewController, animated: true, completion: nil)
         rampPickerViewController.popoverPresentationController?.sourceView = sender
         rampPickerViewController.popoverPresentationController?.sourceRect = sender.bounds
+    }
+
+    @IBAction func removeButtonPressed(_ sender: Any) {
+        if let ramp = selectedRamp {
+            ramp.removeFromParentNode()
+            selectedRamp = nil
+        }
     }
 }
