@@ -21,6 +21,8 @@ class RampPlacerViewController: UIViewController, ARSCNViewDelegate, UIPopoverPr
     //MARK: - Variables
     var selectedRampName: String?
     var selectedRamp: SCNNode?
+    var reselection: Bool = false
+    var placing: Bool = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,6 +36,9 @@ class RampPlacerViewController: UIViewController, ARSCNViewDelegate, UIPopoverPr
 
         // Set the scene to the view
         sceneView.scene = scene
+
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+        sceneView.addGestureRecognizer(tap)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -78,12 +83,13 @@ class RampPlacerViewController: UIViewController, ARSCNViewDelegate, UIPopoverPr
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if selectedRampName != nil {
+        if selectedRampName != nil && !reselection {
             guard let touch = touches.first else { return }
             let results = sceneView.hitTest(touch.location(in: sceneView), types: [.featurePoint])
             guard let hitFeature = results.last else { return }
             let hitTransform = SCNMatrix4(hitFeature.worldTransform)
             let hitPosition = SCNVector3Make(hitTransform.m41, hitTransform.m42, hitTransform.m43)
+            placing = false
             placeRamp(hitPosition)
         }
     }
@@ -121,6 +127,8 @@ class RampPlacerViewController: UIViewController, ARSCNViewDelegate, UIPopoverPr
 
     func onRampSelected(_ rampName: String) {
         selectedRampName = rampName
+        reselection = false
+        placing = true
     }
 
     func placeRamp(_ position: SCNVector3) {
@@ -150,6 +158,20 @@ class RampPlacerViewController: UIViewController, ARSCNViewDelegate, UIPopoverPr
                     let moveDown = SCNAction.repeatForever(SCNAction.moveBy(x: 0, y: -0.08, z: 0, duration: 0.1))
                     ramp.runAction(moveDown)
                 }
+            }
+        }
+    }
+
+    @objc func handleTap(_ gestureRecognizer: UIGestureRecognizer) {
+        if !placing {
+            let location = gestureRecognizer.location(in: sceneView)
+            let hitResults = sceneView.hitTest(location, options: [:])
+            if hitResults.count > 0 {
+                let node = hitResults[0].node
+                selectedRampName = node.name!
+                selectedRamp = node
+                controlsStackView.isHidden = false
+                reselection = true
             }
         }
     }
