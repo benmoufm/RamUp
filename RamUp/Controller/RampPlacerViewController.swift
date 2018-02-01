@@ -11,14 +11,25 @@ import SceneKit
 import ARKit
 
 class RampPlacerViewController: UIViewController, ARSCNViewDelegate, UIPopoverPresentationControllerDelegate {
-
+    //MARK: - Outlets
     @IBOutlet var sceneView: ARSCNView!
+
+    //MARK: - Variables
+    var selectedRampName: String?
+    var selectedRamp: SCNNode?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Set the view's delegate
         sceneView.delegate = self
+
+        // Create a new scene
+        let scene = SCNScene(named: "art.scnassets/main.scn")!
+        sceneView.autoenablesDefaultLighting = true
+
+        // Set the scene to the view
+        sceneView.scene = scene
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -41,6 +52,15 @@ class RampPlacerViewController: UIViewController, ARSCNViewDelegate, UIPopoverPr
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Release any cached data, images, etc that aren't in use.
+    }
+
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else { return }
+        let results = sceneView.hitTest(touch.location(in: sceneView), types: [.featurePoint])
+        guard let hitFeature = results.last else { return }
+        let hitTransform = SCNMatrix4(hitFeature.worldTransform)
+        let hitPosition = SCNVector3Make(hitTransform.m41, hitTransform.m42, hitTransform.m43)
+        placeRamp(hitPosition)
     }
 
     // MARK: - ARSCNViewDelegate
@@ -75,7 +95,17 @@ class RampPlacerViewController: UIViewController, ARSCNViewDelegate, UIPopoverPr
     }
 
     func onRampSelected(_ rampName: String) {
-        //TODO: Add node to the scene
+        selectedRampName = rampName
+    }
+
+    func placeRamp(_ position: SCNVector3) {
+        if let rampName = selectedRampName {
+            let ramp = Ramp.getRamp(forName: rampName)
+            selectedRamp = ramp
+            ramp.position = position
+            ramp.scale = SCNVector3Make(0.01, 0.01, 0.01)
+            sceneView.scene.rootNode.addChildNode(ramp)
+        }
     }
 
     //MARK: - Actions
