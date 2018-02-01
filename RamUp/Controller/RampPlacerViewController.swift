@@ -167,6 +167,7 @@ class RampPlacerViewController: UIViewController, ARSCNViewDelegate, UIPopoverPr
         if let ramp = selectedRamp {
             ramp.removeFromParentNode()
             selectedRamp = nil
+            selectedRampName = nil
         }
     }
 }
