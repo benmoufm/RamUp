@@ -51,7 +51,7 @@ class Ramp {
         case "pyramid":
             return getPyramid()
         case "quarter":
-            return getPipe()
+            return getQuarter()
         default:
             return getPipe()
         }
