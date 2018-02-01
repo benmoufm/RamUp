@@ -125,6 +125,7 @@ class RampPlacerViewController: UIViewController, ARSCNViewDelegate, UIPopoverPr
         if let rampName = selectedRampName {
             controlsStackView.isHidden = false
             let ramp = Ramp.getRamp(forName: rampName)
+            Ramp.orientate(node: ramp)
             selectedRamp = ramp
             ramp.position = position
             ramp.scale = SCNVector3Make(0.01, 0.01, 0.01)
