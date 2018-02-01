@@ -21,6 +21,8 @@ class RampPlacerViewController: UIViewController, ARSCNViewDelegate, UIPopoverPr
     //MARK: - Variables
     var selectedRampName: String?
     var selectedRamp: SCNNode?
+    var reselection: Bool = false
+    var placing: Bool = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,6 +36,9 @@ class RampPlacerViewController: UIViewController, ARSCNViewDelegate, UIPopoverPr
 
         // Set the scene to the view
         sceneView.scene = scene
+
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+        sceneView.addGestureRecognizer(tap)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -78,12 +83,15 @@ class RampPlacerViewController: UIViewController, ARSCNViewDelegate, UIPopoverPr
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let touch = touches.first else { return }
-        let results = sceneView.hitTest(touch.location(in: sceneView), types: [.featurePoint])
-        guard let hitFeature = results.last else { return }
-        let hitTransform = SCNMatrix4(hitFeature.worldTransform)
-        let hitPosition = SCNVector3Make(hitTransform.m41, hitTransform.m42, hitTransform.m43)
-        placeRamp(hitPosition)
+        if selectedRampName != nil && !reselection {
+            guard let touch = touches.first else { return }
+            let results = sceneView.hitTest(touch.location(in: sceneView), types: [.featurePoint])
+            guard let hitFeature = results.last else { return }
+            let hitTransform = SCNMatrix4(hitFeature.worldTransform)
+            let hitPosition = SCNVector3Make(hitTransform.m41, hitTransform.m42, hitTransform.m43)
+            placing = false
+            placeRamp(hitPosition)
+        }
     }
 
     // MARK: - ARSCNViewDelegate
@@ -119,6 +127,8 @@ class RampPlacerViewController: UIViewController, ARSCNViewDelegate, UIPopoverPr
 
     func onRampSelected(_ rampName: String) {
         selectedRampName = rampName
+        reselection = false
+        placing = true
     }
 
     func placeRamp(_ position: SCNVector3) {
@@ -152,8 +162,25 @@ class RampPlacerViewController: UIViewController, ARSCNViewDelegate, UIPopoverPr
         }
     }
 
+    @objc func handleTap(_ gestureRecognizer: UIGestureRecognizer) {
+        if !placing {
+            let location = gestureRecognizer.location(in: sceneView)
+            let hitResults = sceneView.hitTest(location, options: [:])
+            if hitResults.count > 0 {
+                let node = hitResults[0].node
+                selectedRampName = node.name!
+                selectedRamp = node
+                controlsStackView.isHidden = false
+                reselection = true
+            }
+        }
+    }
+
     //MARK: - Actions
     @IBAction func rampButtonPressed(_ sender: UIButton) {
+        selectedRampName = nil
+        selectedRamp = nil
+        controlsStackView.isHidden = true
         let rampPickerViewController = RampPickerViewController(size: CGSize(width: 250, height: 500))
         rampPickerViewController.rampPlacerViewController = self
         rampPickerViewController.modalPresentationStyle = .popover
@@ -168,6 +195,7 @@ class RampPlacerViewController: UIViewController, ARSCNViewDelegate, UIPopoverPr
             ramp.removeFromParentNode()
             selectedRamp = nil
             selectedRampName = nil
+            controlsStackView.isHidden = true
         }
     }
 }
