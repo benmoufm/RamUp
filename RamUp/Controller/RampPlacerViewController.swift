@@ -44,6 +44,25 @@ class RampPlacerViewController: UIViewController, ARSCNViewDelegate, UIPopoverPr
 
         // Run the view's session
         sceneView.session.run(configuration)
+
+        let gestureRecognizerRotateButton = UILongPressGestureRecognizer(
+            target: self,
+            action: #selector(onLongPressGesture(_:))
+        )
+        let gestureRecognizerMoveUpButton = UILongPressGestureRecognizer(
+            target: self,
+            action: #selector(onLongPressGesture(_:))
+        )
+        let gestureRecognizerMoveDownButton = UILongPressGestureRecognizer(
+            target: self,
+            action: #selector(onLongPressGesture(_:))
+        )
+        gestureRecognizerRotateButton.minimumPressDuration = 0.1
+        gestureRecognizerMoveUpButton.minimumPressDuration = 0.1
+        gestureRecognizerMoveDownButton.minimumPressDuration = 0.1
+        rotateButton.addGestureRecognizer(gestureRecognizerRotateButton)
+        moveUpButton.addGestureRecognizer(gestureRecognizerMoveUpButton)
+        moveDownButton.addGestureRecognizer(gestureRecognizerMoveDownButton)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -104,11 +123,31 @@ class RampPlacerViewController: UIViewController, ARSCNViewDelegate, UIPopoverPr
 
     func placeRamp(_ position: SCNVector3) {
         if let rampName = selectedRampName {
+            controlsStackView.isHidden = false
             let ramp = Ramp.getRamp(forName: rampName)
             selectedRamp = ramp
             ramp.position = position
             ramp.scale = SCNVector3Make(0.01, 0.01, 0.01)
             sceneView.scene.rootNode.addChildNode(ramp)
+        }
+    }
+
+    @objc func onLongPressGesture(_ gesture: UILongPressGestureRecognizer) {
+        if let ramp = selectedRamp {
+            if gesture.state == .ended {
+                ramp.removeAllActions()
+            } else if gesture.state == .began {
+                if gesture.view === rotateButton {
+                    let rotate = SCNAction.repeatForever(SCNAction.rotateBy(x: 0, y: CGFloat(0.08 * Double.pi), z: 0, duration: 0.1))
+                    ramp.runAction(rotate)
+                } else if gesture.view === moveUpButton {
+                    let moveUp = SCNAction.repeatForever(SCNAction.moveBy(x: 0, y: 0.08, z: 0, duration: 0.1))
+                    ramp.runAction(moveUp)
+                } else if gesture.view === moveDownButton {
+                    let moveDown = SCNAction.repeatForever(SCNAction.moveBy(x: 0, y: -0.08, z: 0, duration: 0.1))
+                    ramp.runAction(moveDown)
+                }
+            }
         }
     }
 
