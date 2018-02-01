@@ -28,7 +28,7 @@
                                     <action selector="rampButtonPressed:" destination="BV1-FR-VrT" eventType="touchUpInside" id="Vgf-wl-LZx"/>
                                 </connections>
                             </button>
-                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="0R0-F9-KQU">
+                            <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="0R0-F9-KQU">
                                 <rect key="frame" x="10" y="617" width="205" height="40"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hwp-hq-d4Q">
@@ -38,6 +38,9 @@
                                             <constraint firstAttribute="height" constant="40" id="Wcn-cM-seQ"/>
                                         </constraints>
                                         <state key="normal" image="removeButton"/>
+                                        <connections>
+                                            <action selector="removeButtonPressed:" destination="BV1-FR-VrT" eventType="touchUpInside" id="rYw-3Q-S97"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uH3-VK-q5q">
                                         <rect key="frame" x="55" y="0.0" width="40" height="40"/>
@@ -80,6 +83,10 @@
                         <viewLayoutGuide key="safeArea" id="YA1-bS-Ua7"/>
                     </view>
                     <connections>
+                        <outlet property="controlsStackView" destination="0R0-F9-KQU" id="eY6-6m-brl"/>
+                        <outlet property="moveDownButton" destination="izI-rQ-WWy" id="Evm-0K-dE5"/>
+                        <outlet property="moveUpButton" destination="Owy-6n-g2S" id="iXM-Cy-QVF"/>
+                        <outlet property="rotateButton" destination="uH3-VK-q5q" id="B7N-2w-B2C"/>
                         <outlet property="sceneView" destination="8kh-B1-WOY" id="6sl-Ow-9oz"/>
                     </connections>
                 </viewController>
