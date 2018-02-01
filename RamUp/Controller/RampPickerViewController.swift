@@ -39,33 +39,20 @@ class RampPickerViewController: UIViewController {
         camera.usesOrthographicProjection = true
         scene.rootNode.camera = camera
 
-        let orientate = SCNAction.rotateBy(x: -CGFloat(Double.pi)/2, y: 0, z: 0, duration: 0)
+        let pipe = Ramp.getPipe()
+        Ramp.orientate(node: pipe)
+        Ramp.startRotation(node: pipe)
+        scene.rootNode.addChildNode(pipe)
 
-        let rotate = SCNAction.repeatForever(SCNAction.rotateBy(x: 0, y: CGFloat(0.01 * Double.pi), z: 0, duration: 0.1))
+        let pyramid = Ramp.getPyramid()
+        Ramp.orientate(node: pyramid)
+        Ramp.startRotation(node: pyramid)
+        scene.rootNode.addChildNode(pyramid)
 
-        var obj = SCNScene(named: "art.scnassets/pipe.scn")
-        var node = obj?.rootNode.childNode(withName: "pipe", recursively: true)!
-        node?.runAction(orientate)
-        node?.runAction(rotate)
-        node?.scale = SCNVector3Make(0.0022, 0.0022, 0.0022)
-        node?.position = SCNVector3Make(-1, 0.7, -1)
-        scene.rootNode.addChildNode(node!)
-
-        obj = SCNScene(named: "art.scnassets/pyramid.scn")
-        node = obj?.rootNode.childNode(withName: "pyramid", recursively: true)
-        node?.runAction(orientate)
-        node?.runAction(rotate)
-        node?.scale = SCNVector3Make(0.0058, 0.0058, 0.0058)
-        node?.position = SCNVector3Make(-1, -0.45, -1)
-        scene.rootNode.addChildNode(node!)
-
-        obj = SCNScene(named: "art.scnassets/quarter.scn")
-        node = obj?.rootNode.childNode(withName: "quarter", recursively: true)
-        node?.runAction(orientate)
-        node?.runAction(rotate)
-        node?.scale = SCNVector3Make(0.0058, 0.0058, 0.0058)
-        node?.position = SCNVector3Make(-1, -2.2, -1)
-        scene.rootNode.addChildNode(node!)
+        let quarter = Ramp.getQuarter()
+        Ramp.orientate(node: quarter)
+        Ramp.startRotation(node: quarter)
+        scene.rootNode.addChildNode(quarter)
 
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
         sceneView.addGestureRecognizer(tap)
