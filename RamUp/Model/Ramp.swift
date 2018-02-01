@@ -43,4 +43,17 @@ class Ramp {
         let rotate = SCNAction.repeatForever(SCNAction.rotateBy(x: 0, y: CGFloat(0.01 * Double.pi), z: 0, duration: 0.1))
         node.runAction(rotate)
     }
+
+    class func getRamp(forName name: String) -> SCNNode {
+        switch name {
+        case "pipe":
+            return getPipe()
+        case "pyramid":
+            return getPyramid()
+        case "quarter":
+            return getPipe()
+        default:
+            return getPipe()
+        }
+    }
 }
